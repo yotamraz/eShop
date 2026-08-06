@@ -50,8 +50,24 @@ app.MapGet("/bff/catalog/items", async (CatalogService catalogService, int? page
 
 app.MapGet("/bff/catalog/items/{id:int}", async (CatalogService catalogService, int id) =>
 {
-    var item = await catalogService.GetCatalogItem(id);
-    return item is not null ? Results.Ok(item) : Results.NotFound();
+    try
+    {
+        var item = await catalogService.GetCatalogItem(id);
+        return item is not null ? Results.Ok(item) : Results.NotFound();
+    }
+    catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+    {
+        // CatalogService.GetCatalogItem uses GetFromJsonAsync, which throws
+        // HttpRequestException on any non-2xx (including 404 for unknown ids).
+        // Translate that back into a proper NotFound for BFF consumers.
+        return Results.NotFound();
+    }
+    catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+    {
+        // Catalog API returns 400 for invalid identifiers (e.g. id <= 0).
+        // Propagate that to the client so bad input is not masked as 500.
+        return Results.BadRequest();
+    }
 });
 
 app.MapGet("/bff/catalog/brands", async (CatalogService catalogService) =>
