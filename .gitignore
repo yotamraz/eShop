@@ -483,6 +483,15 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 
+# Node/React
+dist/
+
+# Python testing artifacts
+.venv/
+venv/
+.pytest_cache/
+*.pyo
+
 # Playwright
 /test-results/
 /playwright-report/
