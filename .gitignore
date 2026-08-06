@@ -500,3 +500,9 @@ venv/
 /playwright/.auth/
 /user.json
 .azure
+
+# React SPA build output (Vite emits to WebApp/wwwroot/react/)
+src/WebApp/wwwroot/react/
+
+# Pip cache produced by sandbox tooling
+pip/
