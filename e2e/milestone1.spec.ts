@@ -159,28 +159,19 @@ test.describe('SPA fallback for unknown routes', () => {
     expect(body).toContain('/assets/index-');
   });
 
-  test('header logo still renders on unknown route (Layout renders)', async ({ page }) => {
+  test('unknown route redirects to / and header logo is visible', async ({ page }) => {
+    // Fix applied in commit e8af833: App.tsx now has <Route path="*" element={<Navigate to="/" replace />} />
+    // inside the Layout. Navigating to an unknown path should redirect to "/" and render the full
+    // Layout (HeaderBar + CatalogPage + FooterBar).
     await page.goto('/some-random-nonsense');
-    // Wait for React to mount — the logo is rendered by HeaderBar inside Layout
-    // The logo link points to "/" and its img has alt="AdventureWorks"
-    // Note: React Router has no catch-all route so the content area is empty,
-    // but the Layout with HeaderBar/FooterBar should still render.
-    // Give React time to mount
-    await page.waitForTimeout(3000);
-    // After mount, the header logo should be visible
-    // BUG PROBE: if root is still empty, React failed to mount on unknown routes
-    const rootEl = page.locator('#root');
-    const rootHTML = await rootEl.innerHTML();
-    if (rootHTML.trim().length === 0) {
-      // Document the bug: React does not mount on unknown routes
-      console.warn('BUG: React does not mount at unknown routes — root is empty');
-      // The test expectation is that AT MINIMUM the SPA index.html is returned (not a 404)
-      // which is tested in the HTTP-level test above. The logo rendering is blocked by the bug.
-      test.skip(true, 'Bug: React SPA does not mount at unknown routes (no catch-all route)');
-    } else {
-      const logoLink = page.getByRole('link', { name: 'AdventureWorks' });
-      await expect(logoLink).toBeVisible();
-    }
+    // React Router's catch-all triggers a client-side Navigate to "/".
+    // Wait for the URL to settle at "/".
+    await page.waitForURL('/', { timeout: 10000 });
+    // After redirect the header logo must be visible
+    const logoLink = page.getByRole('link', { name: 'AdventureWorks' });
+    await expect(logoLink).toBeVisible();
+    // The catalog heading should also be visible, confirming CatalogPage rendered
+    await expect(page.locator('#page-header-title')).toHaveText('Ready for a new adventure?');
   });
 });
 
