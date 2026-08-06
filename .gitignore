@@ -506,3 +506,7 @@ src/WebApp/wwwroot/react/
 
 # Pip cache produced by sandbox tooling
 pip/
+
+# Sandbox-tool scratch directories
+/Microsoft/
+src/WebApp.React/Microsoft/

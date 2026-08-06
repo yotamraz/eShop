@@ -1,5 +1,4 @@
-﻿using eShop.WebApp.Components;
-using eShop.ServiceDefaults;
+﻿using eShop.ServiceDefaults;
 using eShop.WebAppComponents.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -8,8 +7,6 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-
-builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
 builder.AddApplicationServices();
 
@@ -25,16 +22,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseAntiforgery();
-
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 app.MapForwarder("/product-images/{id}", "https+http://catalog-api", "/api/catalog/items/{id}/pic");
 
