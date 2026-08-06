@@ -1,0 +1,151 @@
+.eshopHeader {
+    position: relative;
+    max-width: 120rem;
+    margin: auto;
+}
+
+.eshopHeader.home .eshopHeaderContainer {
+    height: 38rem;
+    margin-bottom: 0;
+}
+
+.eshopHeader .eshopHeaderContainer {
+    height: 15rem;
+    margin-bottom: 4rem;
+}
+
+.eshopHeaderHero {
+    overflow: hidden;
+    position: absolute;
+    max-width: 100%;
+    left: 0;
+    top: 0;
+}
+
+.eshopHeaderContainer {
+    position: relative;
+    margin: auto;
+    margin: 0 10rem;
+}
+
+.eshopHeaderIntro {
+    position: absolute;
+    max-width: 48rem;
+    bottom: 3rem;
+    white-space: nowrap;
+}
+
+.eshopHeaderIntro h1 {
+    color: #000;
+    font-size: 3.5rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%;
+    margin: 0;
+}
+
+.eshopHeaderIntro p {
+    color: #000;
+    font-size: 2rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 125%;
+    margin: 0;
+}
+
+.eshopHeader .logoHeader {
+    color: black;
+    margin-right: auto;
+    width: 20vw;
+    height: auto;
+    max-width: 250px;
+    min-width: 100px;
+}
+
+.eshopHeaderNavbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 1.25rem;
+    gap: 1.5rem;
+}
+
+@media only screen and (max-width: 480px) {
+    .eshopHeaderHero {
+        height: 18rem;
+    }
+
+    .eshopHeaderHero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .eshopHeader .eshopHeaderContainer {
+        height: 15rem;
+        margin-bottom: 4rem;
+    }
+
+    .eshopHeaderContainer {
+        margin: 0 1rem;
+    }
+
+    .eshopHeader.home .eshopHeaderContainer {
+        height: 18rem;
+        margin: 0 1rem;
+    }
+
+    .eshopHeaderIntro {
+        white-space: wrap;
+        bottom: 0;
+    }
+
+    .eshopHeaderIntro h1 {
+        font-size: 2rem;
+    }
+
+    .eshopHeaderIntro p {
+        font-size: 1.5rem;
+    }
+}
+
+@media only screen and (min-width: 481px) and (max-width: 1024px) {
+    .eshopHeader.home .eshopHeaderHero {
+        height: 24rem;
+    }
+
+    .eshopHeader .eshopHeaderHero {
+        height: 15rem;
+    }
+
+    .eshopHeaderHero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .eshopHeaderContainer {
+        margin: 0 1rem;
+        margin: 0 3rem;
+    }
+
+    .eshopHeader.home .eshopHeaderContainer {
+        height: 24rem;
+        margin: 0 3rem;
+    }
+
+    .eshopHeaderIntro {
+        white-space: wrap;
+    }
+
+    .eshopHeaderIntro h1 {
+        font-size: 2rem;
+    }
+
+    .eshopHeaderIntro p {
+        font-size: 1.5rem;
+    }
+}
