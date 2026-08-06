@@ -21,7 +21,6 @@ export default defineConfig({
       },
     },
   },
-  base: '/react/',
   build: {
     outDir: '../WebApp/wwwroot/react',
     emptyOutDir: true,

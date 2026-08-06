@@ -3,6 +3,7 @@ using eShop.WebAppComponents.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,16 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Serve wwwroot/ for shared assets (/css, /images, /icons, /fonts).
 app.UseStaticFiles();
+
+// Serve wwwroot/react/ at the root path so Vite's hashed bundle assets
+// (referenced as /assets/index-<hash>.js from index.html) resolve.
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(app.Environment.WebRootPath, "react"))
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

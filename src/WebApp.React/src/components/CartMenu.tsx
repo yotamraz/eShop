@@ -1,5 +1,3 @@
-import './CartMenu.module.css';
-
 export function CartMenu() {
   return (
     <a aria-label="cart" href="/cart">
