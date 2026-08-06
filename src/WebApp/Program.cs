@@ -31,6 +31,9 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 app.MapForwarder("/product-images/{id}", "https+http://catalog-api", "/api/catalog/items/{id}/pic");
@@ -75,13 +78,17 @@ app.MapGet("/bff/user", (HttpContext httpContext) =>
     return Results.Ok(new { isAuthenticated = false, userName = "", buyerId = "" });
 });
 
-app.MapGet("/bff/login", () => Results.Challenge(
-    new AuthenticationProperties
+app.MapGet("/bff/login", (HttpContext httpContext) =>
+{
+    var returnUrl = httpContext.Request.Query["returnUrl"].FirstOrDefault() ?? "/";
+    if (!Uri.TryCreate(returnUrl, UriKind.Relative, out _))
     {
-        RedirectUri = "/"
-    },
-    [OpenIdConnectDefaults.AuthenticationScheme]
-));
+        returnUrl = "/";
+    }
+    return Results.Challenge(
+        new AuthenticationProperties { RedirectUri = returnUrl },
+        [OpenIdConnectDefaults.AuthenticationScheme]);
+});
 
 app.MapPost("/bff/logout", async (HttpContext httpContext) =>
 {
