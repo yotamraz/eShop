@@ -44,8 +44,19 @@ app.MapForwarder("/product-images/{id}", "https+http://catalog-api", "/api/catal
 // BFF Catalog endpoints
 app.MapGet("/bff/catalog/items", async (CatalogService catalogService, int? pageIndex, int? pageSize, int? brand, int? type) =>
 {
-    var result = await catalogService.GetCatalogItems(pageIndex ?? 0, pageSize ?? 9, brand, type);
-    return Results.Ok(result);
+    try
+    {
+        var result = await catalogService.GetCatalogItems(pageIndex ?? 0, pageSize ?? 9, brand, type);
+        return Results.Ok(result);
+    }
+    catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+    {
+        return Results.NotFound();
+    }
+    catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+    {
+        return Results.BadRequest();
+    }
 });
 
 app.MapGet("/bff/catalog/items/{id:int}", async (CatalogService catalogService, int id) =>
@@ -72,14 +83,36 @@ app.MapGet("/bff/catalog/items/{id:int}", async (CatalogService catalogService, 
 
 app.MapGet("/bff/catalog/brands", async (CatalogService catalogService) =>
 {
-    var brands = await catalogService.GetBrands();
-    return Results.Ok(brands);
+    try
+    {
+        var brands = await catalogService.GetBrands();
+        return Results.Ok(brands);
+    }
+    catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+    {
+        return Results.NotFound();
+    }
+    catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+    {
+        return Results.BadRequest();
+    }
 });
 
 app.MapGet("/bff/catalog/types", async (CatalogService catalogService) =>
 {
-    var types = await catalogService.GetTypes();
-    return Results.Ok(types);
+    try
+    {
+        var types = await catalogService.GetTypes();
+        return Results.Ok(types);
+    }
+    catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+    {
+        return Results.NotFound();
+    }
+    catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+    {
+        return Results.BadRequest();
+    }
 });
 
 // BFF Auth endpoints

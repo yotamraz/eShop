@@ -27,6 +27,13 @@
     display: block;
 }
 
+.signInButton {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+}
+
 .dropdownItem button {
     border: 0;
     background: transparent;

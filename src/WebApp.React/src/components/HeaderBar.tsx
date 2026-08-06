@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { UserMenu } from './UserMenu';
 import { CartMenu } from './CartMenu';
 import styles from './HeaderBar.module.css';
@@ -15,9 +15,9 @@ export function HeaderBar() {
       </div>
       <div className={styles.eshopHeaderContainer}>
         <nav className={styles.eshopHeaderNavbar}>
-          <a className={`${styles.logo} ${styles.logoHeader}`} href="/">
-            <img alt="AdventureWorks" src="/images/logo-header.svg" className={`${styles.logo} ${styles.logoHeader}`} />
-          </a>
+          <Link className={styles.logoHeader} to="/">
+            <img alt="AdventureWorks" src="/images/logo-header.svg" className={styles.logoHeader} />
+          </Link>
 
           <UserMenu />
           <CartMenu />

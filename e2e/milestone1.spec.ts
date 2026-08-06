@@ -178,30 +178,27 @@ test.describe('SPA fallback for unknown routes', () => {
 // ---------------------------------------------------------------------------
 // 6. Assets under /assets/* are served
 // ---------------------------------------------------------------------------
+async function assertAssetServed(
+  request: import('@playwright/test').APIRequestContext,
+  extension: 'js' | 'css',
+  contentType: string,
+) {
+  const indexResp = await request.get('/');
+  const indexHtml = await indexResp.text();
+  const match = indexHtml.match(new RegExp('/assets/(index-[^"]+\\.' + extension + ')'));
+  expect(match, `${extension.toUpperCase()} bundle path must be present in index.html`).toBeTruthy();
+  const assetResp = await request.get('/assets/' + match![1]);
+  expect(assetResp.status()).toBe(200);
+  expect(assetResp.headers()['content-type']).toContain(contentType);
+}
+
 test.describe('Static assets', () => {
   test('JS bundle is served with correct content-type', async ({ request }) => {
-    // Get the index.html first to find the current hashed JS bundle name
-    const indexResp = await request.get('/');
-    const indexHtml = await indexResp.text();
-    const jsMatch = indexHtml.match(/\/assets\/(index-[^"]+\.js)/);
-    expect(jsMatch, 'JS bundle path must be present in index.html').toBeTruthy();
-    const jsPath = '/assets/' + jsMatch![1];
-
-    const jsResp = await request.get(jsPath);
-    expect(jsResp.status()).toBe(200);
-    expect(jsResp.headers()['content-type']).toContain('javascript');
+    await assertAssetServed(request, 'js', 'javascript');
   });
 
   test('CSS bundle is served with correct content-type', async ({ request }) => {
-    const indexResp = await request.get('/');
-    const indexHtml = await indexResp.text();
-    const cssMatch = indexHtml.match(/\/assets\/(index-[^"]+\.css)/);
-    expect(cssMatch, 'CSS bundle path must be present in index.html').toBeTruthy();
-    const cssPath = '/assets/' + cssMatch![1];
-
-    const cssResp = await request.get(cssPath);
-    expect(cssResp.status()).toBe(200);
-    expect(cssResp.headers()['content-type']).toContain('css');
+    await assertAssetServed(request, 'css', 'css');
   });
 
   test('product image endpoint proxies to catalog API', async ({ request }) => {

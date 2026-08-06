@@ -88,9 +88,8 @@ describe('authStore', () => {
     expect(state.isLoading).toBe(false);
   });
 
-  it('login redirects to /bff/login', () => {
-    // Replace window.location with a writable mock
-    const mockLocation = { href: '' } as Location;
+  it('login redirects to /bff/login with default returnUrl', () => {
+    const mockLocation = { href: '', origin: 'http://localhost:3000' } as Location;
     Object.defineProperty(window, 'location', {
       value: mockLocation,
       writable: true,
@@ -98,11 +97,11 @@ describe('authStore', () => {
     });
 
     useAuthStore.getState().login();
-    expect(window.location.href).toBe('/bff/login');
+    expect(window.location.href).toBe('/bff/login?returnUrl=%2F');
   });
 
   it('login includes returnUrl when provided', () => {
-    const mockLocation = { href: '' } as Location;
+    const mockLocation = { href: '', origin: 'http://localhost:3000' } as Location;
     Object.defineProperty(window, 'location', {
       value: mockLocation,
       writable: true,
@@ -111,5 +110,66 @@ describe('authStore', () => {
 
     useAuthStore.getState().login('/checkout');
     expect(window.location.href).toBe('/bff/login?returnUrl=%2Fcheckout');
+  });
+
+  it('login rejects cross-origin returnUrl (open-redirect protection)', () => {
+    const mockLocation = { href: '', origin: 'http://localhost:3000' } as Location;
+    Object.defineProperty(window, 'location', {
+      value: mockLocation,
+      writable: true,
+      configurable: true,
+    });
+
+    useAuthStore.getState().login('https://evil.com/steal');
+    expect(window.location.href).toBe('/bff/login?returnUrl=%2F');
+  });
+
+  it('logout posts to /bff/logout and resets state', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({ ok: true }),
+    );
+
+    const mockLocation = { href: '' } as Location;
+    Object.defineProperty(window, 'location', {
+      value: mockLocation,
+      writable: true,
+      configurable: true,
+    });
+
+    useAuthStore.setState({ isAuthenticated: true, userName: 'testuser', buyerId: 'b1' });
+    await useAuthStore.getState().logout();
+
+    expect(fetch).toHaveBeenCalledWith('/bff/logout', { method: 'POST' });
+    const state = useAuthStore.getState();
+    expect(state.isAuthenticated).toBe(false);
+    expect(state.userName).toBe('');
+    expect(state.buyerId).toBe('');
+    expect(window.location.href).toBe('/');
+  });
+
+  it('logout resets state even when fetch fails', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockRejectedValue(new Error('Network error')),
+    );
+
+    const mockLocation = { href: '' } as Location;
+    Object.defineProperty(window, 'location', {
+      value: mockLocation,
+      writable: true,
+      configurable: true,
+    });
+
+    useAuthStore.setState({ isAuthenticated: true, userName: 'testuser', buyerId: 'b1' });
+    try {
+      await useAuthStore.getState().logout();
+    } catch {
+      // expected — fetch threw, but finally block still runs
+    }
+
+    const state = useAuthStore.getState();
+    expect(state.isAuthenticated).toBe(false);
+    expect(window.location.href).toBe('/');
   });
 });

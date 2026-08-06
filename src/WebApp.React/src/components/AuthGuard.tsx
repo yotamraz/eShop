@@ -10,7 +10,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      login(window.location.pathname);
+      login(window.location.pathname + window.location.search + window.location.hash);
     }
   }, [isLoading, isAuthenticated, login]);
 

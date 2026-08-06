@@ -145,4 +145,20 @@ describe('CatalogPage', () => {
     render(<CatalogPage />);
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
+
+  it('shows an error message when the API call fails', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 500,
+        json: async () => ({}),
+      }),
+    );
+
+    render(<CatalogPage />);
+    expect(
+      await screen.findByText(/there was a problem loading the catalog/i),
+    ).toBeInTheDocument();
+  });
 });

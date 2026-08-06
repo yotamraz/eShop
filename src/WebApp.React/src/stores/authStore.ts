@@ -11,10 +11,10 @@ interface AuthState {
   logout: () => Promise<void>;
 }
 
+const UNAUTHENTICATED_USER = { isAuthenticated: false, userName: '', buyerId: '' } as const;
+
 export const useAuthStore = create<AuthState>((set) => ({
-  isAuthenticated: false,
-  userName: '',
-  buyerId: '',
+  ...UNAUTHENTICATED_USER,
   isLoading: true,
 
   fetchUser: async () => {
@@ -29,25 +29,31 @@ export const useAuthStore = create<AuthState>((set) => ({
           isLoading: false,
         });
       } else {
-        set({ isAuthenticated: false, userName: '', buyerId: '', isLoading: false });
+        set({ ...UNAUTHENTICATED_USER, isLoading: false });
       }
     } catch {
-      set({ isAuthenticated: false, userName: '', buyerId: '', isLoading: false });
+      set({ ...UNAUTHENTICATED_USER, isLoading: false });
     }
   },
 
   login: (returnUrl?: string) => {
-    const url = returnUrl
-      ? `/bff/login?returnUrl=${encodeURIComponent(returnUrl)}`
-      : '/bff/login';
-    window.location.href = url;
+    let safeReturnUrl = returnUrl ?? '/';
+    try {
+      const parsed = new URL(safeReturnUrl, window.location.origin);
+      if (parsed.origin !== window.location.origin) {
+        safeReturnUrl = '/';
+      }
+    } catch {
+      safeReturnUrl = '/';
+    }
+    window.location.href = `/bff/login?returnUrl=${encodeURIComponent(safeReturnUrl)}`;
   },
 
   logout: async () => {
     try {
       await fetch('/bff/logout', { method: 'POST' });
     } finally {
-      set({ isAuthenticated: false, userName: '', buyerId: '' });
+      set(UNAUTHENTICATED_USER);
       window.location.href = '/';
     }
   },

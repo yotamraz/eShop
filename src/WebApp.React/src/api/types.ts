@@ -34,6 +34,7 @@ export interface BasketItem {
   unitPrice: number;
   oldUnitPrice: number;
   quantity: number;
+  pictureUrl: string;
 }
 
 export interface UserInfo {

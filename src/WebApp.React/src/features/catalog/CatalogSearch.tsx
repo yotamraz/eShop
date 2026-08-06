@@ -8,6 +8,54 @@ interface CatalogSearchProps {
   itemTypeId?: number;
 }
 
+interface FilterItem {
+  id: number;
+  label: string;
+}
+
+function FilterGroup({
+  title,
+  items,
+  selectedId,
+  onSelect,
+}: {
+  title: string;
+  items: FilterItem[];
+  selectedId: number | undefined;
+  onSelect: (id: number | null) => void;
+}) {
+  return (
+    <div className={styles.catalogSearchGroup}>
+      <h3>{title}</h3>
+      <div className={styles.catalogSearchGroupTags}>
+        <a
+          href="#"
+          className={`${styles.catalogSearchTag} ${selectedId == null ? styles.active : ''}`}
+          onClick={(e) => {
+            e.preventDefault();
+            onSelect(null);
+          }}
+        >
+          All
+        </a>
+        {items.map((item) => (
+          <a
+            key={item.id}
+            href="#"
+            className={`${styles.catalogSearchTag} ${selectedId === item.id ? styles.active : ''}`}
+            onClick={(e) => {
+              e.preventDefault();
+              onSelect(item.id);
+            }}
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function CatalogSearch({ brandId, itemTypeId }: CatalogSearchProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -25,24 +73,13 @@ export function CatalogSearch({ brandId, itemTypeId }: CatalogSearchProps) {
     return null;
   }
 
-  const handleBrandClick = (id: number | null) => {
+  const handleFilterClick = (param: string, id: number | null) => {
     const newParams = new URLSearchParams(searchParams);
     newParams.delete('page');
     if (id === null) {
-      newParams.delete('brand');
+      newParams.delete(param);
     } else {
-      newParams.set('brand', String(id));
-    }
-    setSearchParams(newParams);
-  };
-
-  const handleTypeClick = (id: number | null) => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.delete('page');
-    if (id === null) {
-      newParams.delete('type');
-    } else {
-      newParams.set('type', String(id));
+      newParams.set(param, String(id));
     }
     setSearchParams(newParams);
   };
@@ -54,62 +91,18 @@ export function CatalogSearch({ brandId, itemTypeId }: CatalogSearchProps) {
         Filters
       </div>
       <div className={styles.catalogSearchTypes}>
-        <div className={styles.catalogSearchGroup}>
-          <h3>Brand</h3>
-          <div className={styles.catalogSearchGroupTags}>
-            <a
-              href="#"
-              className={`${styles.catalogSearchTag} ${brandId == null ? styles.active : ''}`}
-              onClick={(e) => {
-                e.preventDefault();
-                handleBrandClick(null);
-              }}
-            >
-              All
-            </a>
-            {catalogBrands.map((brand) => (
-              <a
-                key={brand.id}
-                href="#"
-                className={`${styles.catalogSearchTag} ${brandId === brand.id ? styles.active : ''}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleBrandClick(brand.id);
-                }}
-              >
-                {brand.brand}
-              </a>
-            ))}
-          </div>
-        </div>
-        <div className={styles.catalogSearchGroup}>
-          <h3>Type</h3>
-          <div className={styles.catalogSearchGroupTags}>
-            <a
-              href="#"
-              className={`${styles.catalogSearchTag} ${itemTypeId == null ? styles.active : ''}`}
-              onClick={(e) => {
-                e.preventDefault();
-                handleTypeClick(null);
-              }}
-            >
-              All
-            </a>
-            {catalogItemTypes.map((itemType) => (
-              <a
-                key={itemType.id}
-                href="#"
-                className={`${styles.catalogSearchTag} ${itemTypeId === itemType.id ? styles.active : ''}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleTypeClick(itemType.id);
-                }}
-              >
-                {itemType.type}
-              </a>
-            ))}
-          </div>
-        </div>
+        <FilterGroup
+          title="Brand"
+          items={catalogBrands.map((b) => ({ id: b.id, label: b.brand }))}
+          selectedId={brandId}
+          onSelect={(id) => handleFilterClick('brand', id)}
+        />
+        <FilterGroup
+          title="Type"
+          items={catalogItemTypes.map((t) => ({ id: t.id, label: t.type }))}
+          selectedId={itemTypeId}
+          onSelect={(id) => handleFilterClick('type', id)}
+        />
       </div>
     </div>
   );

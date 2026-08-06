@@ -1,19 +1,21 @@
+import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import styles from './UserMenu.module.css';
 
 export function UserMenu() {
-  const { isAuthenticated, userName, logout } = useAuthStore();
+  const { isAuthenticated, userName, login, logout } = useAuthStore();
+  const location = useLocation();
 
   if (isAuthenticated) {
     return (
       <>
         <h3>{userName}</h3>
         <div className={styles.dropdownMenu}>
-          <span className={styles.dropdownButton}>
+          <span>
             <img role="presentation" src="/icons/user.svg" />
           </span>
           <div className={styles.dropdownContent}>
-            <a className={styles.dropdownItem} href="/user/orders">My orders</a>
+            <Link className={styles.dropdownItem} to="/user/orders">My orders</Link>
             <div className={styles.dropdownItem}>
               <button type="button" onClick={() => { void logout(); }}>Log out</button>
             </div>
@@ -24,8 +26,13 @@ export function UserMenu() {
   }
 
   return (
-    <a aria-label="Sign in" href="/user/login">
+    <button
+      type="button"
+      aria-label="Sign in"
+      className={styles.signInButton}
+      onClick={() => login(location.pathname + location.search + location.hash)}
+    >
       <img role="presentation" src="/icons/user.svg" />
-    </a>
+    </button>
   );
 }

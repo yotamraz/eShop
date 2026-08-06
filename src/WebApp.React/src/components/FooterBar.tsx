@@ -5,7 +5,7 @@ export function FooterBar() {
     <footer className={styles.eshopFooter}>
       <div className={styles.eshopFooterContent}>
         <div className={styles.eshopFooterRow}>
-          <img role="presentation" src="/images/logo-footer.svg" className={`${styles.logo} ${styles.logoFooter}`} />
+          <img role="presentation" src="/images/logo-footer.svg" className={styles.logoFooter} />
           <p>&copy; AdventureWorks</p>
         </div>
       </div>

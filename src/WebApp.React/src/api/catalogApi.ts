@@ -2,6 +2,14 @@ import type { CatalogItem, CatalogResult, CatalogBrand, CatalogItemType } from '
 
 const BASE_URL = '/bff/catalog';
 
+async function fetchJson<T>(url: string, label: string): Promise<T> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`${label}: ${response.status}`);
+  }
+  return response.json();
+}
+
 export async function getCatalogItems(
   pageIndex: number,
   brand?: number | null,
@@ -17,33 +25,17 @@ export async function getCatalogItems(
   if (type != null) {
     params.set('type', String(type));
   }
-  const response = await fetch(`${BASE_URL}/items?${params}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch catalog items: ${response.status}`);
-  }
-  return response.json();
+  return fetchJson<CatalogResult>(`${BASE_URL}/items?${params}`, 'Failed to fetch catalog items');
 }
 
 export async function getCatalogItem(id: number): Promise<CatalogItem> {
-  const response = await fetch(`${BASE_URL}/items/${id}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch catalog item ${id}: ${response.status}`);
-  }
-  return response.json();
+  return fetchJson<CatalogItem>(`${BASE_URL}/items/${id}`, `Failed to fetch catalog item ${id}`);
 }
 
 export async function getBrands(): Promise<CatalogBrand[]> {
-  const response = await fetch(`${BASE_URL}/brands`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch brands: ${response.status}`);
-  }
-  return response.json();
+  return fetchJson<CatalogBrand[]>(`${BASE_URL}/brands`, 'Failed to fetch brands');
 }
 
 export async function getTypes(): Promise<CatalogItemType[]> {
-  const response = await fetch(`${BASE_URL}/types`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch types: ${response.status}`);
-  }
-  return response.json();
+  return fetchJson<CatalogItemType[]>(`${BASE_URL}/types`, 'Failed to fetch types');
 }

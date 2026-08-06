@@ -4,7 +4,7 @@ import { getCatalogItems } from '../../api/catalogApi';
 import { CatalogListItem } from './CatalogListItem';
 import { CatalogSearch } from './CatalogSearch';
 import styles from './CatalogPage.module.css';
-import { useEffect } from 'react';
+import { usePageHeader } from '../../hooks/usePageHeader';
 
 const PAGE_SIZE = 9;
 
@@ -14,22 +14,12 @@ export function CatalogPage() {
   const brandId = searchParams.get('brand') ? Number(searchParams.get('brand')) : undefined;
   const typeId = searchParams.get('type') ? Number(searchParams.get('type')) : undefined;
 
-  const { data: catalogResult, isLoading } = useQuery({
+  const { data: catalogResult, isLoading, isError } = useQuery({
     queryKey: ['catalogItems', page, brandId, typeId],
     queryFn: () => getCatalogItems(page - 1, brandId, typeId, PAGE_SIZE),
   });
 
-  useEffect(() => {
-    document.title = 'AdventureWorks';
-    const titleEl = document.getElementById('page-header-title');
-    const subtitleEl = document.getElementById('page-header-subtitle');
-    if (titleEl) titleEl.textContent = 'Ready for a new adventure?';
-    if (subtitleEl) subtitleEl.textContent = 'Start the season with the latest in clothing and equipment.';
-    return () => {
-      if (titleEl) titleEl.textContent = '';
-      if (subtitleEl) subtitleEl.textContent = '';
-    };
-  }, []);
+  usePageHeader('Ready for a new adventure?', 'Start the season with the latest in clothing and equipment.');
 
   const totalPages = catalogResult
     ? Math.ceil(catalogResult.count / PAGE_SIZE)
@@ -53,6 +43,8 @@ export function CatalogPage() {
 
       {isLoading ? (
         <p>Loading...</p>
+      ) : isError ? (
+        <p>There was a problem loading the catalog. Please try again later.</p>
       ) : catalogResult ? (
         <div>
           <div className={styles.catalogItems}>

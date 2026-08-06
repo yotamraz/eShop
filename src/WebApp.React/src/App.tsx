@@ -5,7 +5,6 @@ import { AuthGuard } from './components/AuthGuard';
 import { CatalogPage } from './features/catalog/CatalogPage';
 import { ItemPage } from './features/item/ItemPage';
 import { LoginPage } from './features/user/LoginPage';
-import { LogoutPage } from './features/user/LogoutPage';
 import { useAuthStore } from './stores/authStore';
 
 function CartPlaceholder() {
@@ -57,14 +56,6 @@ export function App() {
           }
         />
         <Route path="/user/login" element={<LoginPage />} />
-        <Route
-          path="/user/logout"
-          element={
-            <AuthGuard>
-              <LogoutPage />
-            </AuthGuard>
-          }
-        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
