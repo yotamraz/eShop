@@ -22,6 +22,7 @@
 
   <!-- AI -->
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.AI" />
     <PackageReference Include="Pgvector" />
     <PackageReference Include="Pgvector.EntityFrameworkCore" />
   </ItemGroup>
