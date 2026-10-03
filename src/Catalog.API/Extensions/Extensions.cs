@@ -35,17 +35,6 @@ public static class Extensions
         builder.Services.AddOptions<CatalogOptions>()
             .BindConfiguration(nameof(CatalogOptions));
 
-        if (builder.Configuration["OllamaEnabled"] is string ollamaEnabled && bool.Parse(ollamaEnabled))
-        {
-            builder.AddOllamaApiClient("embedding")
-                .AddEmbeddingGenerator();
-        }
-        else if (!string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("textEmbeddingModel")))
-        {
-            builder.AddOpenAIClientFromConfiguration("textEmbeddingModel")
-                .AddEmbeddingGenerator();
-        }
-
         builder.Services.AddScoped<ICatalogAI, CatalogAI>();
     }
 }

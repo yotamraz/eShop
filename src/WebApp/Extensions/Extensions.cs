@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
-using Microsoft.Extensions.AI;
 using Microsoft.IdentityModel.JsonWebTokens;
 
 public static class Extensions
@@ -93,19 +92,7 @@ public static class Extensions
 
     private static void AddAIServices(this IHostApplicationBuilder builder)
     {
-        ChatClientBuilder? chatClientBuilder = null;
-        if (builder.Configuration["OllamaEnabled"] is string ollamaEnabled && bool.Parse(ollamaEnabled))
-        {
-            chatClientBuilder = builder.AddOllamaApiClient("chat")
-                .AddChatClient();
-        }
-        else if (!string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("chatModel")))
-        {
-            chatClientBuilder = builder.AddOpenAIClientFromConfiguration("chatModel")
-                .AddChatClient();
-        }
-
-        chatClientBuilder?.UseFunctionInvocation();
+        // AI services (Microsoft.Extensions.AI) not available in .NET 8
     }
 
     public static async Task<string?> GetBuyerIdAsync(this AuthenticationStateProvider authenticationStateProvider)
