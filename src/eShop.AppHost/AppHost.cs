@@ -18,7 +18,8 @@ var webhooksDb = postgres.AddDatabase("webhooksdb");
 var launchProfileName = ShouldUseHttpForEndpoints() ? "http" : "https";
 
 // Services
-var identityApi = builder.AddProject<Projects.Identity_API>("identity-api")
+var identityApi = builder.AddProject<Projects.Identity_API>("identity-api", launchProfileName)
+    .WithExternalHttpEndpoints()
     .WithReference(identityDb);
 
 var identityEndpoint = identityApi.GetEndpoint(launchProfileName);
@@ -50,11 +51,12 @@ var webHooksApi = builder.AddProject<Projects.Webhooks_API>("webhooks-api")
     .WithEnvironment("Identity__Url", identityEndpoint);
 
 // Apps
-var webhooksClient = builder.AddProject<Projects.WebhookClient>("webhooksclient")
+var webhooksClient = builder.AddProject<Projects.WebhookClient>("webhooksclient", launchProfileName)
     .WithReference(webHooksApi)
     .WithEnvironment("IdentityUrl", identityEndpoint);
 
-var webApp = builder.AddProject<Projects.WebApp>("webapp")
+var webApp = builder.AddProject<Projects.WebApp>("webapp", launchProfileName)
+    .WithExternalHttpEndpoints()
     .WithReference(basketApi)
     .WithReference(catalogApi)
     .WithReference(orderingApi)
