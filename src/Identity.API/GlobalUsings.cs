@@ -6,7 +6,7 @@ global using System.Linq;
 global using System.Security.Claims;
 global using System.Text.RegularExpressions;
 global using System.Threading.Tasks;
-global using Duende.IdentityModel;
+global using IdentityModel;
 global using Duende.IdentityServer;
 global using Duende.IdentityServer.Configuration;
 global using Duende.IdentityServer.Events;

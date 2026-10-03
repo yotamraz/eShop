@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Security.Claims;
 using System.Text.Json;
 using eShop.WebAppComponents.Services;

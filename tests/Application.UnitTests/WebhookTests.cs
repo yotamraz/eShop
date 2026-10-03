@@ -26,7 +26,7 @@ public class WebhookTests
         var valid = Validator.TryValidateObject(request, new ValidationContext(request), results, true);
 
         Assert.IsFalse(valid);
-        Assert.HasCount(3, results);
+        Assert.AreEqual(3, results.Count);
     }
 
     [TestMethod]
@@ -49,11 +49,11 @@ public class WebhookTests
 
         await sender.SendAll(receivers, data);
 
-        Assert.HasCount(1, handler.Requests);
+        Assert.AreEqual(1, handler.Requests.Count);
         var request = handler.Requests[0];
         Assert.AreEqual(HttpMethod.Post, request.Method);
         Assert.AreEqual("token", request.Headers.GetValues("X-eshop-whtoken").Single());
-        Assert.Contains("payload", await request.Content!.ReadAsStringAsync(TestContext.CancellationToken));
+        StringAssert.Contains(await request.Content!.ReadAsStringAsync(TestContext.CancellationToken), "payload");
     }
 
     private sealed class RecordingHandler : HttpMessageHandler

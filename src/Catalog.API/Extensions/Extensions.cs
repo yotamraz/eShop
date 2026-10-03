@@ -35,16 +35,15 @@ public static class Extensions
         builder.Services.AddOptions<CatalogOptions>()
             .BindConfiguration(nameof(CatalogOptions));
 
-        if (builder.Configuration["OllamaEnabled"] is string ollamaEnabled && bool.Parse(ollamaEnabled))
-        {
-            builder.AddOllamaApiClient("embedding")
-                .AddEmbeddingGenerator();
-        }
-        else if (!string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("textEmbeddingModel")))
-        {
-            builder.AddOpenAIClientFromConfiguration("textEmbeddingModel")
-                .AddEmbeddingGenerator();
-        }
+        // AI embedding generator registration (Aspire-specific extensions unavailable in 8.2.x):
+        // if (builder.Configuration["OllamaEnabled"] is string ollamaEnabled && bool.Parse(ollamaEnabled))
+        // {
+        //     builder.AddOllamaApiClient("embedding").AddEmbeddingGenerator();
+        // }
+        // else if (!string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("textEmbeddingModel")))
+        // {
+        //     builder.AddOpenAIClientFromConfiguration("textEmbeddingModel").AddEmbeddingGenerator();
+        // }
 
         builder.Services.AddScoped<ICatalogAI, CatalogAI>();
     }

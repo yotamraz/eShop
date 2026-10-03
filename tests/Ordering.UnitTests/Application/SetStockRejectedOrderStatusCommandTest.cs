@@ -20,7 +20,7 @@ public class SetStockRejectedOrderStatusCommandTest
 
         //Assert for List<int>
         Assert.IsNotNull(deserializedCommand.OrderStockItems);
-        Assert.HasCount(command.OrderStockItems.Count, deserializedCommand.OrderStockItems);
+        Assert.AreEqual(command.OrderStockItems.Count, deserializedCommand.OrderStockItems.Count);
 
         for (int i = 0; i < command.OrderStockItems.Count; i++)
         {

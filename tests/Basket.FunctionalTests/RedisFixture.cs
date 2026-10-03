@@ -27,7 +27,11 @@ public sealed class RedisFixture : IAsyncLifetime
     {
         await _app.StartAsync();
         var notifications = _app.Services.GetRequiredService<ResourceNotificationService>();
-        await notifications.WaitForResourceHealthyAsync(_redis.Resource.Name);
+        // WaitForResourceHealthyAsync is not available in Aspire 8.2.x;
+        // WaitForResourceAsync with Running is the best available option.
+        // ConnectionMultiplexer.ConnectAsync's built-in connect timeout
+        // bridges the gap between Running and fully ready.
+        await notifications.WaitForResourceAsync(_redis.Resource.Name, KnownResourceStates.Running);
 
         var connectionString = await _redis.Resource.ConnectionStringExpression.GetValueAsync(CancellationToken.None);
         _connection = await ConnectionMultiplexer.ConnectAsync(connectionString!);
