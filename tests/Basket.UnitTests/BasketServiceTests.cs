@@ -27,7 +27,7 @@ public class BasketServiceTests
         var response = await service.GetBasket(new GetBasketRequest(), serverCallContext);
 
         Assert.IsInstanceOfType<CustomerBasketResponse>(response);
-        Assert.IsEmpty(response.Items);
+        Assert.AreEqual(0, response.Items.Count);
     }
 
     [TestMethod]
@@ -45,7 +45,7 @@ public class BasketServiceTests
         var response = await service.GetBasket(new GetBasketRequest(), serverCallContext);
 
         Assert.IsInstanceOfType<CustomerBasketResponse>(response);
-        Assert.HasCount(1, response.Items);
+        Assert.AreEqual(1, response.Items.Count);
     }
 
     [TestMethod]
@@ -62,7 +62,7 @@ public class BasketServiceTests
         var response = await service.GetBasket(new GetBasketRequest(), serverCallContext);
 
         Assert.IsInstanceOfType<CustomerBasketResponse>(response);
-        Assert.IsEmpty(response.Items);
+        Assert.AreEqual(0, response.Items.Count);
     }
 
     [TestMethod]
@@ -78,7 +78,7 @@ public class BasketServiceTests
 
         var response = await service.UpdateBasket(request, context);
 
-        Assert.HasCount(1, response.Items);
+        Assert.AreEqual(1, response.Items.Count);
         Assert.AreEqual(42, response.Items[0].ProductId);
         Assert.AreEqual(3, response.Items[0].Quantity);
         await repository.Received(1).UpdateBasketAsync(Arg.Is<CustomerBasket>(basket =>
@@ -94,7 +94,7 @@ public class BasketServiceTests
         var repository = Substitute.For<IBasketRepository>();
         var service = new BasketService(repository, NullLogger<BasketService>.Instance);
 
-        var exception = await Assert.ThrowsAsync<RpcException>(() =>
+        var exception = await Assert.ThrowsExceptionAsync<RpcException>(() =>
             service.UpdateBasket(new UpdateBasketRequest(), CreateContext(null!)));
 
         Assert.AreEqual(StatusCode.Unauthenticated, exception.StatusCode);
@@ -109,7 +109,7 @@ public class BasketServiceTests
             .Returns(Task.FromResult<CustomerBasket>(null!));
         var service = new BasketService(repository, NullLogger<BasketService>.Instance);
 
-        var exception = await Assert.ThrowsAsync<RpcException>(() =>
+        var exception = await Assert.ThrowsExceptionAsync<RpcException>(() =>
             service.UpdateBasket(new UpdateBasketRequest(), CreateContext("missing")));
 
         Assert.AreEqual(StatusCode.NotFound, exception.StatusCode);

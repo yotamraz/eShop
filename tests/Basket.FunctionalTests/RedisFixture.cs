@@ -27,7 +27,7 @@ public sealed class RedisFixture : IAsyncLifetime
     {
         await _app.StartAsync();
         var notifications = _app.Services.GetRequiredService<ResourceNotificationService>();
-        await notifications.WaitForResourceHealthyAsync(_redis.Resource.Name);
+        await notifications.WaitForResourceAsync(_redis.Resource.Name, KnownResourceStates.Running);
 
         var connectionString = await _redis.Resource.ConnectionStringExpression.GetValueAsync(CancellationToken.None);
         _connection = await ConnectionMultiplexer.ConnectAsync(connectionString!);
