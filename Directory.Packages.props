@@ -48,13 +48,13 @@
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="8.2.2" />
     <!-- Xabaril packages -->
     <PackageVersion Include="AspNetCore.HealthChecks.Uris" Version="8.0.1" />
-    <!-- Open Telemetry 1.7.x -->
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.7.0" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.7.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.7.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.7.0-beta.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.7.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.7.0" />
+    <!-- Open Telemetry 1.9.x (Aspire 8.2.2 requires OpenTelemetry.Extensions.Hosting >= 1.9.0) -->
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.9.0-beta.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.9.0" />
     <!-- IdentityServer 7.0.x for .NET 8 -->
     <PackageVersion Include="Duende.IdentityServer" Version="7.0.4" />
     <PackageVersion Include="Duende.IdentityServer.AspNetIdentity" Version="7.0.4" />
@@ -76,7 +76,7 @@
     <PackageVersion Include="System.Reflection.TypeExtensions" Version="4.7.0" />
     <PackageVersion Include="xunit.v3.mtp-v2" Version="3.2.2" />
     <PackageVersion Include="IdentityModel" Version="7.0.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="1.2.0" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="1.2.3" />
     <!-- Before license change — Apache 2.0 -->
     <PackageVersion Include="MediatR" Version="12.4.0" />
   </ItemGroup>
