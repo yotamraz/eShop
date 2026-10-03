@@ -1,5 +1,6 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.AI
 @using eShop.WebApp.Chatbot
 @inject IJSRuntime JS
 @inject CatalogService CatalogService
@@ -97,11 +98,18 @@
     bool thinking;
     IJSObjectReference? jsModule;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        // AI chat services (Microsoft.Extensions.AI) not available in .NET 8
-        missingConfiguration = true;
-        return Task.CompletedTask;
+        var client = ServiceProvider.GetService<IChatClient>();
+        if (client is not null)
+        {
+            AuthenticationState auth = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            chatState = new ChatState(CatalogService, BasketState, auth.User, ProductImages, LoggerFactory, client);
+        }
+        else
+        {
+            missingConfiguration = true;
+        }
     }
 
     private async Task SendMessageAsync()
