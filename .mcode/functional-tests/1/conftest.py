@@ -3,12 +3,6 @@ Shared fixtures for Ordering.API functional tests.
 Manages the mock OIDC server, JWT token generation, and health checks.
 """
 import os
-import sys
-import time
-import uuid
-import json
-import subprocess
-import signal
 import requests
 import pytest
 import jwt
@@ -16,7 +10,6 @@ from datetime import datetime, timedelta, timezone
 
 # Paths
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
-REPO_DIR = os.path.dirname(os.path.dirname(os.path.dirname(TEST_DIR)))
 
 # Configuration
 ORDERING_API_PORT = os.environ.get("ORDERING_API_PORT", "5224")

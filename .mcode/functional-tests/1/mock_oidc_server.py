@@ -3,11 +3,8 @@ Minimal OIDC discovery mock server for functional testing.
 Serves OpenID Connect discovery document and JWKS so that
 the Ordering.API can validate self-signed JWT tokens.
 """
-import json
-import sys
 import os
 import base64
-from threading import Thread
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 
